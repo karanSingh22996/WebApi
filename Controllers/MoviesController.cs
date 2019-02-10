@@ -57,9 +57,9 @@ namespace WebApi.Controllers
             return movies;
         }
         [Route("update")]
-        public IList<MovieModel> Put(int id,string name,string pname,string dname,string dt)
+        public IList<MovieModel> Put(int id,string name,string aname,string pname,string dname,string dt)
         {
-            IList<MovieModel> movies = accessMovie.EditMovie(id,name,dname,pname,dt).Result;
+            IList<MovieModel> movies = accessMovie.EditMovie(id,name,aname,dname,pname,dt).Result;
             return movies;
         }
         [Route("add")]

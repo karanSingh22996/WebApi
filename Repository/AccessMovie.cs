@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -20,12 +21,21 @@ namespace WebApi.Repository
         }
         public async Task<IList<MovieModel>> GetMovieById(int id)
         {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+            try
             {
-                var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById",id, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                
-               return moveDetails.AsList();
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById", new { id = id }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+
+                    return moveDetails.AsList();
+                }
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            
         }
 
         //public async Task<IList<MovieModel>> AddMovies(MovieModel movieModel)
@@ -81,16 +91,16 @@ namespace WebApi.Repository
         {
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
             {
-                var moveDetails = await connection.QueryAsync<MovieModel>("deleteMovie",id, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                var moveDetails = await connection.QueryAsync<MovieModel>("deleteMovie",new { id =id}, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 return moveDetails.AsList();
             }
         }
-        public async Task<IList<MovieModel>> EditMovie(int id,string name,string dname,string pname,string dt)
+        public async Task<IList<MovieModel>> EditMovie(int id,string name,string aname,string dname,string pname,string dt)
         {
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
             {
-                var moveDetails = await connection.QueryAsync<MovieModel>("Edit",new {id, name, dname, pname, dt }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                var moveDetails = await connection.QueryAsync<MovieModel>("Edit",new {id=id, movieName=name,actor=aname, directorname=dname, producername=pname, Dor=dt }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 return moveDetails.AsList();
             }
