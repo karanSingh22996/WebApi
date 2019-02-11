@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "e55afad1e076a22d761618db462df32c35bd723f"
+    "signature": "f3c254208f9a042da8dc231d98d4c5109393d4cf"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.2": {
       "WebApi/1.0.0": {
         "dependencies": {
+          "AngularJS.Core": "1.7.5",
           "Dapper": "1.50.5",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
@@ -37,6 +38,7 @@
           "WebApi.dll": {}
         }
       },
+      "AngularJS.Core/1.7.5": {},
       "Dapper/1.50.5": {
         "dependencies": {
           "System.Data.SqlClient": "4.6.0",
@@ -3544,6 +3546,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AngularJS.Core/1.7.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XZra4+bKEbk46kenOXa4vOJONJZuqOFQsGZ5E1wXvlwKWXVazk2F9lFyGpydxQkNAVhbM9Yo5Vf7Evn/x2qGgA==",
+      "path": "angularjs.core/1.7.5",
+      "hashPath": "angularjs.core.1.7.5.nupkg.sha512"
     },
     "Dapper/1.50.5": {
       "type": "package",

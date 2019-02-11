@@ -1,120 +1,176 @@
-﻿using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-using WebApi.Models;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="AccessMovie.cs" company="CompanyName">
+//     Company copyright tag.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace WebApi.Repository
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Threading.Tasks;
+    using Dapper;
+    using WebApi.Models;
+
+    /// <summary>
+    /// AccessMovie is a repository class
+    /// </summary>
     public class AccessMovie
     {
+        /// <summary>
+        /// Gets all movies in database.
+        /// </summary>
+        /// <returns>list of movies</returns>
+        /// <exception cref="System.Exception">system exception</exception>
         public async Task<IList<MovieModel>> GetAllMovies()
         {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-            {
-                var moveDetails = await connection.QueryAsync<MovieModel>("getMovies", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                connection.Close();
-                return moveDetails.AsList();
-            }
-        }
-        public async Task<IList<MovieModel>> GetMovieById(int id)
-        {
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
             try
             {
+                ////connection is established between databse and application
                 using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
                 {
-                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById", new { id = id }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
+                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovies", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                    connection.Close();
                     return moveDetails.AsList();
                 }
             }
-            catch(Exception ex)
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Gets the movie by identity.
+        /// </summary>
+        /// <param name="id">integer id.</param>
+        /// <returns>list of movie</returns>
+        public async Task<IList<MovieModel>> GetMovieById(int id)
+        {
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
+            try
+            {
+                ////connection is established between databse and application
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById", id, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                    connection.Close();
+                    return moveDetails.AsList();
+                }
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
             }
-            
         }
-
-        //public async Task<IList<MovieModel>> AddMovies(MovieModel movieModel)
-        //{
-        //    List<SqlCommand> list = new List<SqlCommand>();
-        //    using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-        //    {
-        //        SqlCommand cmd = new SqlCommand("addMovie", connection);
-        //        //SqlCommand cmd = new SqlCommand("getMovieById", connection);
-        //        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-        //        cmd.Parameters.AddWithValue("@id", movieModel.Id);
-        //        cmd.Parameters.AddWithValue("@movieName", movieModel.MovieName);
-        //        cmd.Parameters.AddWithValue("@actor", movieModel.Actor);
-        //        cmd.Parameters.AddWithValue("@director", movieModel.Director);
-        //        cmd.Parameters.AddWithValue("@producer", movieModel.Producer);
-        //        cmd.Parameters.AddWithValue("@dor", movieModel.DateOfRelease);
-        //        list.Add(cmd);
-        //        connection.Close();
-        //        ////var moveDetails = await connection.QueryAsync<MovieModel>("addMovies", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-        //        connection.Close();
-        //        cmd.ExecuteNonQuery();
-        //        ////return list;
-        //    }
-        //}
-        public async Task<IList<PersonTypeModel>> GetActor()
+        
+        /// <summary>
+        /// Gets the director.
+        /// </summary>
+        /// <returns>list of director</returns>
+        /// <exception cref="System.Exception">system exception</exception>
+        public async Task<IList<PersonTypeModel>> GetPerson(int id)
         {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
+            try
             {
-                var moveDetails = await connection.QueryAsync<PersonTypeModel>("getActor", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
+                ////connection is established between databse and application
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    var moveDetails = await connection.QueryAsync<PersonTypeModel>("getPerson",new { id }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                    connection.Close();
+                    return moveDetails.AsList();
+                }
             }
-        }
-        public async Task<IList<PersonTypeModel>> GetDirector()
-        {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+            catch (Exception e)
             {
-                var moveDetails = await connection.QueryAsync<PersonTypeModel>("getDirector", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
-            }
-        }
-        public async Task<IList<PersonTypeModel>> GetProducer()
-        {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-            {
-                var moveDetails = await connection.QueryAsync<PersonTypeModel>("getProducer", commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
-            }
-        }
-        public async Task<IList<MovieModel>> DeleteMovie(int id)
-        {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-            {
-                var moveDetails = await connection.QueryAsync<MovieModel>("deleteMovie",new { id =id}, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
-            }
-        }
-        public async Task<IList<MovieModel>> EditMovie(int id,string name,string aname,string dname,string pname,string dt)
-        {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-            {
-                var moveDetails = await connection.QueryAsync<MovieModel>("Edit",new {id=id, movieName=name,actor=aname, directorname=dname, producername=pname, Dor=dt }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
-            }
-        }
-        public async Task<IList<MovieModel>> AddMovie(MovieModel movie)
-        {
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
-            {
-                var moveDetails = await connection.QueryAsync<MovieModel>("Edit", new { movie.MovieName, movie.Director, movie.Producer,movie.DateOfRelease }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-
-                return moveDetails.AsList();
+                throw new Exception(e.Message);
             }
         }
 
+        /// <summary>
+        /// Deletes the movie.
+        /// </summary>
+        /// <param name="id">integer id</param>
+        /// <exception cref="System.Exception">system exception</exception>
+        public void DeleteMovie(int id)
+        {
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
+            try
+            {
+                ////connection is established between databse and application
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    var moveDetails = connection.Execute("deleteMovie", new { id = id }, commandType: CommandType.StoredProcedure);
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
+        /// <summary>
+        /// Edits the movie.
+        /// </summary>
+        /// <param name="model">The movie model.</param>
+        /// <returns>boolean true and false</returns>
+        /// <exception cref="System.Exception">system exception</exception>
+        public bool EditMovie(MovieModel model)
+        {
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
+            try
+            {
+                ////connection is established between databse and application
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    int rowsAffected = connection.Execute("Edit", new { model.Id, model.MovieName, model.Actor, model.Director, model.Producer, model.DateOfRelease }, commandType: CommandType.StoredProcedure);
+                    connection.Close();
+                    if (rowsAffected > 0)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Adds the movie.
+        /// </summary>
+        /// <param name="movie">The movie model.</param>
+        /// <returns>boolean true and false</returns>
+        /// <exception cref="System.Exception">system exception</exception>
+        public bool AddMovie(MovieModel movie)
+        {
+            ////try is initilized to execute ignore the error and continue normal flow of the execution
+            try
+            {
+                ////connection is established between databse and application
+                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
+                {
+                    int rowsAffected = connection.Execute("addMovies", new { movie.MovieName, movie.Director, movie.Producer, movie.DateOfRelease }, commandType: CommandType.StoredProcedure);
+                    if (rowsAffected > 0)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
