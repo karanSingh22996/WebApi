@@ -55,7 +55,7 @@ namespace WebApi.Repository
                 ////connection is established between databse and application
                 using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
                 {
-                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById", id, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                    var moveDetails = await connection.QueryAsync<MovieModel>("getMovieById", new { id }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
                     connection.Close();
                     return moveDetails.AsList();
                 }
@@ -72,7 +72,7 @@ namespace WebApi.Repository
         /// </summary>
         /// <returns>list of director</returns>
         /// <exception cref="System.Exception">system exception</exception>
-        public async Task<IList<PersonTypeModel>> GetPerson(int id)
+        public async Task<IList<PersonTypeModel>> GetCharacter(string type)
         {
             ////try is initilized to execute ignore the error and continue normal flow of the execution
             try
@@ -80,7 +80,7 @@ namespace WebApi.Repository
                 ////connection is established between databse and application
                 using (var connection = new SqlConnection("Data Source=.;Initial Catalog=Bollywood;Integrated Security=True"))
                 {
-                    var moveDetails = await connection.QueryAsync<PersonTypeModel>("getPerson",new { id }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                    var moveDetails = await connection.QueryAsync<PersonTypeModel>("getCharacter",new { type }, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
                     connection.Close();
                     return moveDetails.AsList();
                 }

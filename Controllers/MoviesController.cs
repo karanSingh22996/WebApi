@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         /// get movie by id
         /// </summary>
         /// <param name="id">id of integer</param>
-        /// <returns>details of particular movie</returns>
+        /// <returns>details of particular movie</returns>       
         [HttpGet("{id}")]
         public IList<MovieModel> GetMovies(int id)
         {
@@ -64,13 +64,13 @@ namespace WebApi.Controllers
         /// get the details of director
         /// </summary>
         /// <returns>listing details of director</returns>
-        [Route("persontype")]
-        [HttpGet("{id}")]
-        public IList<PersonTypeModel> GetPersonType(int id)
+        [Route("persontype/{type}")]
+        public IList<PersonTypeModel> GetPersonType(string type)
+
         {
             try
             {
-                IList<PersonTypeModel> movies = accessMovie.GetPerson(id).Result;
+                IList<PersonTypeModel> movies = accessMovie.GetCharacter(type).Result;
                 return movies;
             }
             catch (Exception e)
@@ -121,7 +121,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="movie">movie model</param>
         /// <returns>boolean true and false</returns>
-        [Route("add")]
+        [HttpPost]
         public bool Post(MovieModel movie)
         {
             try
